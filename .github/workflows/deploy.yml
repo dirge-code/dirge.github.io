@@ -1,0 +1,30 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy site to docs/
+        run: |
+          mkdir -p docs
+          cp index.html docs/
+
+      - name: Deploy to GitHub Pages
+        run: |
+          git config user.email "dmitri.sotnikov@gmail.com"
+          git config user.name "Dmitri Sotnikov"
+          git add docs/
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Deploy #${{ github.run_number }}"
+            git push
+          fi
