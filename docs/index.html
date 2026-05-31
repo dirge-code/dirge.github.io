@@ -300,6 +300,9 @@ p{font-size:15px}
   gap:1px;background:var(--border);border:1px solid var(--border);
   border-radius:6px;overflow:hidden;
 }
+/* Fixed-column variant for grids whose card count divides evenly,
+   so no empty cells show the gap background. */
+.card-grid.g3{grid-template-columns:repeat(3,1fr)}
 .card{
   background:var(--bg);padding:18px 16px;transition:background 0.15s;
 }
@@ -378,6 +381,7 @@ p{font-size:15px}
 /* ─── RESPONSIVE ────────────────────────────────────────────── */
 @media(max-width:780px){
   .feat-grid{grid-template-columns:1fr 1fr}
+  .card-grid.g3{grid-template-columns:1fr 1fr}
   .hero-stats{grid-template-columns:repeat(2,1fr)}
   .col2{grid-template-columns:1fr;gap:12px}
   .col2-side{flex-direction:row;flex-wrap:wrap;border-top:0}
@@ -388,7 +392,7 @@ p{font-size:15px}
 }
 @media(max-width:500px){
   .feat-grid{grid-template-columns:1fr}
-  .card-grid{grid-template-columns:1fr}
+  .card-grid,.card-grid.g3{grid-template-columns:1fr}
   .hero-stats{grid-template-columns:1fr 1fr}
   .foot-inner{grid-template-columns:1fr}
 }
@@ -605,7 +609,7 @@ pre{margin:0}
   <h2 class="sec-title">25+ <em>built-in</em> tools</h2>
   <p class="sec-lede">Everything the agent needs — files, shell, search, code intelligence, and delegation — with zero configuration.</p>
 
-  <div class="card-grid">
+  <div class="card-grid g3">
     <div class="card"><h4>Files &amp; edits</h4><p><code>read</code> · <code>write</code> · <code>edit</code> · <code>apply_patch</code> · <code>list_dir</code> · <code>find_files</code></p></div>
     <div class="card"><h4>Shell</h4><p><code>bash</code> · <code>bash_output</code> · <code>kill_shell</code> — foreground &amp; background</p></div>
     <div class="card"><h4>Search</h4><p><code>grep</code> · <code>glob</code> · <code>session_search</code></p></div>
