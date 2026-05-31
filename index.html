@@ -13,6 +13,9 @@
 <meta property="og:description" content="Minimal, high-performance AI coding agent for your terminal. ~8MB RAM idle, ~36MB binary. Built in Rust." />
 <meta property="og:url" content="https://dirge-code.github.io/" />
 <meta property="og:type" content="website" />
+<meta property="og:image" content="https://dirge-code.github.io/img/dirge1.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://dirge-code.github.io/img/dirge1.jpg" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>⚡</text></svg>" />
 <style>
 /* ─── RESET & BASE ──────────────────────────────────────────── */
@@ -216,35 +219,67 @@ p{font-size:15px}
 .hs b{display:block;font-size:28px;font-weight:700;line-height:1;color:var(--fg-hi)}
 .hs span{display:block;margin-top:6px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-mute)}
 
-/* ─── TERMINAL (always-dark mock) ──────────────────────────── */
-.term{
-  background:var(--t-bg);border:1px solid var(--border);
-  margin-top:14px;font-size:13px;line-height:1.8;
-  overflow:hidden;font-family:var(--mono);
-  border-radius:6px;
+/* ─── dirge TUI recreation (phosphor theme, always dark) ───── */
+.tui-win{
+  margin-top:14px;border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;background:#04080c;
 }
-.term-head{
+.tui-bar{
   display:flex;align-items:center;gap:10px;
-  padding:9px 14px;border-bottom:1px solid #21262d;
-  background:var(--t-panel);
+  padding:9px 14px;background:#0d1117;border-bottom:1px solid #1b2027;
 }
-.term-dots{display:flex;gap:6px}
-.term-dots i{width:9px;height:9px;border-radius:50%;display:inline-block}
-.term-dots i:nth-child(1){background:#f85149}
-.term-dots i:nth-child(2){background:#d29922}
-.term-dots i:nth-child(3){background:#3fb950}
-.term-title{font-size:11px;color:var(--t-dim);letter-spacing:0.06em;margin-left:4px}
-.term-body{padding:18px 18px 22px;min-height:160px;color:var(--t-green2)}
-.tl{white-space:pre-wrap;word-break:break-all}
-.tp{color:var(--t-blue)}
-.tc{color:var(--t-text)}
-.to{color:var(--t-dim)}
-.tg{color:var(--t-green)}
-.tw{color:var(--t-amber)}
-.ti{color:var(--t-blue)}
-.td{color:var(--t-mute)}
-.cursor{display:inline-block;width:8px;height:14px;background:var(--t-green2);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+.tui-bar .dots{display:flex;gap:6px}
+.tui-bar .dots i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.tui-bar .dots i:nth-child(1){background:#f85149}
+.tui-bar .dots i:nth-child(2){background:#d29922}
+.tui-bar .dots i:nth-child(3){background:#3fb950}
+.tui-bar .t{font-size:11px;color:#8b949e;letter-spacing:0.04em;font-family:var(--mono)}
+
+.tui{
+  --ph-bg:#04080c;--ph-line:#1c7a3f;--ph-label:#46d479;
+  --ph-fg:#83e3a3;--ph-bright:#d6f9e3;--ph-dim:#4f7a60;
+  --ph-add-bg:#0c3a1d;--ph-add:#74e58f;--ph-del-bg:#3a1416;--ph-del:#ef8e8e;
+  --ph-amber:#d8c45a;--ph-cyan:#5fd0d0;
+  background:var(--ph-bg);color:var(--ph-fg);
+  font-family:var(--mono);font-size:11px;line-height:1.5;padding:15px 14px 12px;
+}
+.tui-grid{display:grid;grid-template-columns:134px 1fr 148px;gap:11px;align-items:start}
+.tui-col{display:flex;flex-direction:column;gap:15px;min-width:0}
+
+.pnl{position:relative;border:1px solid var(--ph-line);padding:10px 9px 8px;border-radius:3px;min-width:0}
+.pnl > .pl{
+  position:absolute;top:-6px;left:9px;background:var(--ph-bg);
+  padding:0 5px;color:var(--ph-label);font-size:8.5px;letter-spacing:0.14em;white-space:nowrap;
+}
+.pnl p{margin:0;color:var(--ph-fg);line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dimt{color:var(--ph-dim)}
+.brt{color:var(--ph-bright)}
+.amb{color:var(--ph-amber)}
+.cy{color:var(--ph-cyan)}
+.ok{color:var(--ph-add)}
+.banner{color:var(--ph-bright);letter-spacing:0.42em;font-size:13px;text-align:center;padding:5px 0 3px}
+
+.log p{white-space:normal;margin-bottom:2px}
+.log .step{padding-left:12px;text-indent:-12px}
+.diff{margin-top:9px;border:1px solid var(--ph-line);border-radius:3px;overflow:hidden}
+.diff .dh{padding:4px 8px;color:var(--ph-dim);border-bottom:1px solid #11331f;font-size:10px}
+.diff .ln{padding:1px 9px;white-space:pre;font-size:10.5px;overflow:hidden;text-overflow:ellipsis}
+.diff .del{background:var(--ph-del-bg);color:var(--ph-del)}
+.diff .add{background:var(--ph-add-bg);color:var(--ph-add)}
+
+.tui-status{
+  margin-top:13px;border-top:1px solid #11331f;padding-top:9px;
+  font-size:10px;color:var(--ph-dim);display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.tui-status .run{color:var(--ph-add)}
+.tcur{display:inline-block;width:7px;height:12px;background:var(--ph-add);vertical-align:-2px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
+
+@media(max-width:720px){
+  .tui-grid{grid-template-columns:1fr}
+  .tui .side{display:none}
+  .diff .ln{font-size:11px}
+}
 
 /* ─── FEATURES ──────────────────────────────────────────────── */
 .feat-grid{
@@ -442,22 +477,92 @@ pre{margin:0}
     <div class="hs"><b>8</b><span>Providers</span></div>
   </div>
 
-  <div class="term">
-    <div class="term-head">
-      <span class="term-dots"><i></i><i></i><i></i></span>
-      <span class="term-title">session — dirge</span>
+  <!-- dirge's actual TUI (phosphor theme), recreated in CSS -->
+  <div class="tui-win">
+    <div class="tui-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="t">dirge — ~/src/scittle-voxel</span>
     </div>
-    <div class="term-body">
-      <div class="tl"><span class="tp">$</span> <span class="tc">dirge</span></div>
-      <div class="tl"><span class="td">▸ dirge v0.2.1 · phosphor · deepseek-v4-pro</span></div>
-      <div class="tl"><span class="td">▸ 25 tools · 3 MCP servers · 1 plugin · memory loaded</span></div>
-      <div class="tl"></div>
-      <div class="tl"><span class="tp">▸</span> <span class="tc">refactor the error handling in auth.rs</span></div>
-      <div class="tl"><span class="td">… thinking …</span></div>
-      <div class="tl"><span class="tg">✓</span> read <span class="td">src/auth.rs</span></div>
-      <div class="tl"><span class="tg">✓</span> edit <span class="td">src/auth.rs (+38 lines, tree-sitter validated)</span></div>
-      <div class="tl"><span class="tg">✓</span> bash <span class="td">cargo test (12 passed)</span></div>
-      <div class="tl"><span class="tp">▸</span> <span class="td">done.</span><span class="cursor"></span></div>
+    <div class="tui">
+      <div class="tui-grid">
+
+        <!-- LEFT -->
+        <div class="tui-col side">
+          <div class="pnl">
+            <span class="pl">AGENT STATUS</span>
+            <div class="banner">D I R G E</div>
+          </div>
+          <div class="pnl">
+            <span class="pl">CONTEXT</span>
+            <p>ctx <span class="ok">▓▓░░░░░░░░</span> 1%</p>
+            <p class="dimt">11.5k / 1.0M · cmp:0</p>
+          </div>
+          <div class="pnl">
+            <span class="pl">ACTIVITY</span>
+            <p>edit voxel.html</p>
+            <p>read voxel.html</p>
+            <p>skill paren-check</p>
+            <p class="dimt">bash cd …/scittle</p>
+          </div>
+        </div>
+
+        <!-- CENTER -->
+        <div class="tui-col">
+          <div class="pnl log">
+            <span class="pl">AGENT LOG STREAM</span>
+            <p><span class="cy">&lt;dirge&gt;</span> <span class="brt">Now I have the plan:</span></p>
+            <p><span class="amb">Goal:</span> add FPS-style mouse-look + wheel height to <span class="cy">voxel.html</span></p>
+            <p class="step">1. add <span class="cy">:mouseX</span>/<span class="cy">:mouseY</span> delta fields to <span class="cy">input</span></p>
+            <p class="step">2. add mousemove + wheel listeners (pointer lock)</p>
+            <p class="step">3. consume deltas in <span class="cy">update-camera</span>, reset per frame</p>
+
+            <div class="diff">
+              <div class="dh">EDIT — voxel.html  <span class="ok">(+2 lines, validated)</span></div>
+              <div class="ln del">-(def input</div>
+              <div class="ln del">-  #js {:forwardBackward 0.0</div>
+              <div class="ln del">-       :lookUp false})</div>
+              <div class="ln add">+(def input</div>
+              <div class="ln add">+  #js {:forwardBackward 0.0</div>
+              <div class="ln add">+       :lookUp false</div>
+              <div class="ln add">+       :mouseX 0.0</div>
+              <div class="ln add">+       :mouseY 0.0})</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="tui-col side">
+          <div class="pnl">
+            <span class="pl">SYSTEM LOAD</span>
+            <p>CPU <span class="dimt">[##......]</span> 24%</p>
+            <p>MEM <span class="dimt">[####....]</span> 55%</p>
+          </div>
+          <div class="pnl">
+            <span class="pl">MCP</span>
+            <p><span class="ok">●</span> chiasmus</p>
+            <p><span class="ok">●</span> rlm</p>
+            <p><span class="ok">●</span> wavescope</p>
+            <p><span class="ok">●</span> lattice</p>
+          </div>
+          <div class="pnl">
+            <span class="pl">LSP</span>
+            <p><span class="ok">●</span> clojure-lsp</p>
+          </div>
+          <div class="pnl">
+            <span class="pl">MODIFIED</span>
+            <p>voxel.html</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tui-status">
+        <span>scittle-voxel</span><span class="dimt">·</span>
+        <span>deepseek-v4-pro</span><span class="dimt">·</span>
+        <span>11k/1.0M (1%)</span><span class="dimt">·</span>
+        <span>3 msgs</span><span class="dimt">·</span>
+        <span class="run">running [code]</span><span class="tcur"></span>
+      </div>
     </div>
   </div>
 </section>
