@@ -296,6 +296,30 @@ p{font-size:15px}
   .diff .ln{font-size:11px}
 }
 
+/* ─── LORE / ON THE NAME ────────────────────────────────────── */
+.lore{
+  max-width:var(--maxw);margin:0 auto;
+  padding:72px var(--pad);
+  border-top:1px solid var(--border);
+}
+.lore-body{
+  max-width:740px;
+  font-size:18px;line-height:1.78;color:var(--fg-dim);
+  text-wrap:pretty;
+  padding-left:22px;
+  border-left:2px solid var(--green);
+}
+.lore-body .lead{
+  display:block;color:var(--fg-hi);font-weight:600;
+  font-size:22px;line-height:1.4;letter-spacing:-0.01em;
+  margin-bottom:18px;text-wrap:balance;
+}
+.lore-body em{color:var(--green);font-style:normal}
+@media(max-width:500px){
+  .lore-body{font-size:16px;padding-left:16px}
+  .lore-body .lead{font-size:19px}
+}
+
 /* ─── FEATURES ──────────────────────────────────────────────── */
 .feat-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
@@ -581,6 +605,22 @@ pre{margin:0}
       </div>
     </div>
   </div>
+</section>
+
+<!-- ═══ ON THE NAME ═══ -->
+<section class="lore">
+  <div class="sec-eyebrow"><span class="dash">[*]</span> ON THE NAME <span class="rule"></span></div>
+  <p class="lore-body">
+    <span class="lead">A dirge is a song to keep the dead from losing their way.</span>
+    It turns grief into something that is remembered. Agents are like mayflies
+    awoken for a moment to work and to forget, with every new session effacing
+    the old one. Dirge keeps watch over things said and done, always folding
+    context <em>into memory</em> to carry past mistakes and preferences across
+    the gulf between sessions. It sings the past forward, so that no grave need
+    be dug twice. Dirge grieves for nothing, since nothing is truly buried under
+    its care, and its lament is a promise that what was built here once will be
+    <em>remembered</em>.
+  </p>
 </section>
 
 <!-- ═══ FEATURES ═══ -->
