@@ -1177,9 +1177,20 @@ pre{margin:0}
     <span class="s">"escalation"</span>: <span class="s">"anthropic"</span>,
     <span class="s">"review"</span>:     <span class="s">"glm"</span>
   },
-  <span class="s">"mcp_servers"</span>: [
-    { <span class="s">"command"</span>: <span class="s">"my-mcp-server"</span>, <span class="s">"args"</span>: [<span class="s">"--stdio"</span>] }
-  ]
+  <span class="s">"mcp_servers"</span>: {
+    <span class="s">"lattice"</span>: {
+      <span class="s">"command"</span>: <span class="s">"lattice-mcp"</span>,
+      <span class="s">"args"</span>: []
+    },
+    <span class="s">"chiasmus"</span>: {
+      <span class="s">"command"</span>: <span class="s">"npx"</span>,
+      <span class="s">"args"</span>: [<span class="s">"-y"</span>, <span class="s">"chiasmus"</span>]
+    },
+    <span class="s">"wavescope"</span>: {
+      <span class="s">"command"</span>: <span class="s">"wavescope-mcp"</span>,
+      <span class="s">"args"</span>: []
+    }
+  }
 }</pre>
   </div>
 
