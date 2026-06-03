@@ -262,10 +262,14 @@ p{font-size:15px}
 .tui-bar .t{font-size:11px;color:#8b949e;letter-spacing:0.04em;font-family:var(--mono)}
 
 .tui{
-  --ph-bg:#04080c;--ph-line:#1c7a3f;--ph-label:#d8b24a;
-  --ph-fg:#83e3a3;--ph-bright:#d6f9e3;--ph-dim:#4f7a60;
-  --ph-add-bg:#0c3a1d;--ph-add:#74e58f;--ph-del-bg:#3a1416;--ph-del:#ef8e8e;
-  --ph-amber:#d8b24a;--ph-cyan:#5fd0d0;--ph-gray:#7c858d;
+  /* dirge's real phosphor palette (src/ui/theme.rs :: phosphor()) — exact RGB.
+     #222 background, agent green, user cyan, critic lavender, perm amber,
+     vivid-green panel headers — so the mock matches the running TUI. */
+  --ph-bg:#222222;--ph-line:#4e9e6a;--ph-label:#60dc8c;
+  --ph-fg:#8ae89c;--ph-bright:#9eeeac;--ph-dim:#567460;
+  --ph-add-bg:#17331f;--ph-add:#8ae89c;--ph-del-bg:#3a1517;--ph-del:#ff8a86;
+  --ph-amber:#ffb955;--ph-cyan:#7dcdd2;--ph-gray:#6a8c78;
+  --ph-tool:#6cbc96;--ph-critic:#baa6d8;--ph-red:#ff5f5a;
   background:var(--ph-bg);color:var(--ph-fg);
   font-family:var(--mono);font-size:11px;line-height:1.5;padding:15px 14px 12px;
 }
@@ -278,15 +282,21 @@ p{font-size:15px}
   padding:0 5px;color:var(--ph-label);font-size:8.5px;letter-spacing:0.14em;white-space:nowrap;
 }
 .pnl p{margin:0;color:var(--ph-fg);line-height:1.55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* Left panels (context / activity) read in dim gray; right panels
-   (system / mcp / lsp / modified) read in amber — matching the TUI. */
+/* Left ([AGENT STATUS]) reads in muted green; right ([SYSTEM]: mcp / lsp /
+   todos / modified) reads in the system green-grey — matching the TUI. */
 .lcol .pnl p{color:var(--ph-gray)}
-.rcol .pnl p{color:var(--ph-amber)}
+.rcol .pnl p{color:var(--ph-gray)}
 .dimt{color:var(--ph-dim)}
 .brt{color:var(--ph-bright)}
 .amb{color:var(--ph-amber)}
 .cy{color:var(--ph-cyan)}
 .ok{color:var(--ph-add)}
+/* IRC-style handles, exactly as the TUI colors them. */
+.h-dirge{color:var(--ph-fg)}      /* assistant — agent green */
+.h-you{color:var(--ph-cyan)}      /* you — cyan */
+.h-critic{color:var(--ph-critic)} /* critic — lavender */
+.tl{color:var(--ph-tool)}         /* tool headers — teal */
+.rd{color:var(--ph-red)}
 
 /* Bottom input row: status face + prompt field */
 .tui-input{display:grid;grid-template-columns:88px 1fr;gap:11px;margin-top:14px}
@@ -565,10 +575,10 @@ pre{margin:0}
           </div>
           <div class="pnl">
             <span class="pl">ACTIVITY</span>
-            <p>edit voxel.cljs</p>
-            <p>read voxel.cljs</p>
-            <p>skill paren-check</p>
-            <p>bash cd …/voxel</p>
+            <p><span class="tl">edit</span> voxel.cljs</p>
+            <p><span class="tl">read</span> voxel.cljs</p>
+            <p><span class="tl">skill</span> paren-check</p>
+            <p><span class="tl">bash</span> cd …/voxel</p>
           </div>
         </div>
 
@@ -576,23 +586,26 @@ pre{margin:0}
         <div class="tui-col">
           <div class="pnl log">
             <span class="pl">AGENT LOG STREAM</span>
-            <p><span class="cy">&lt;dirge&gt;</span> <span class="brt">Now I have the plan:</span></p>
-            <p><span class="amb">Goal:</span> add FPS-style mouse-look + wheel height to <span class="cy">voxel.cljs</span></p>
+            <p><span class="h-you">&lt;you&gt;</span> add FPS-style mouse-look + wheel height to <span class="cy">voxel.cljs</span></p>
+            <p><span class="h-dirge">&lt;dirge&gt;</span> <span class="brt">Here's the plan:</span></p>
             <p class="step">1. add <span class="cy">:mouseX</span>/<span class="cy">:mouseY</span> delta fields to <span class="cy">input</span></p>
-            <p class="step">2. add mousemove + wheel listeners (pointer lock)</p>
+            <p class="step">2. mousemove + wheel listeners (pointer lock)</p>
             <p class="step">3. consume deltas in <span class="cy">update-camera</span>, reset per frame</p>
 
             <div class="diff">
-              <div class="dh">EDIT — voxel.cljs  <span class="ok">(+2 lines, validated)</span></div>
-              <div class="ln del">-(def input</div>
-              <div class="ln del">-  #js {:forwardBackward 0.0</div>
+              <div class="dh"><span class="tl">BASH</span> · clojure -M:dev -e "(require 'voxel)"</div>
+              <div class="ln"><span class="ok">✓ compiled — 0 warnings</span></div>
+            </div>
+
+            <div class="diff">
+              <div class="dh"><span class="tl">EDIT</span> — voxel.cljs <span class="ok">(+2 lines, validated)</span></div>
               <div class="ln del">-       :lookUp false})</div>
-              <div class="ln add">+(def input</div>
-              <div class="ln add">+  #js {:forwardBackward 0.0</div>
               <div class="ln add">+       :lookUp false</div>
               <div class="ln add">+       :mouseX 0.0</div>
               <div class="ln add">+       :mouseY 0.0})</div>
             </div>
+
+            <p><span class="h-critic">&lt;critic&gt;</span> <span class="dimt">deltas reset each frame ✓ — looks complete</span></p>
           </div>
         </div>
 
@@ -615,6 +628,12 @@ pre{margin:0}
             <p><span class="ok">●</span> clojure-lsp</p>
           </div>
           <div class="pnl">
+            <span class="pl">TODOS</span>
+            <p><span class="ok">✓</span> input delta fields</p>
+            <p><span class="amb">▸</span> pointer-lock listeners</p>
+            <p><span class="dimt">○</span> minimap overlay</p>
+          </div>
+          <div class="pnl">
             <span class="pl">MODIFIED</span>
             <p>voxel.cljs</p>
           </div>
@@ -624,15 +643,16 @@ pre{margin:0}
 
       <div class="tui-input">
         <div class="tui-face">[$_$]</div>
-        <div class="tui-field"><span class="tcur"></span></div>
+        <div class="tui-field"><span class="brt">░▌</span>&nbsp;add a minimap overlay to the HUD<span class="tcur"></span></div>
       </div>
 
       <div class="tui-status">
-        <span>voxel</span><span class="dimt">·</span>
+        <span>voxel:main</span><span class="dimt">·</span>
         <span>deepseek-v4-pro</span><span class="dimt">·</span>
         <span>11k/1.0M (1%)</span><span class="dimt">·</span>
         <span>3 msgs</span><span class="dimt">·</span>
-        <span>running [code]</span>
+        <span>code</span><span class="dimt">·</span>
+        <span class="brt">running</span>
       </div>
     </div>
   </div>
@@ -699,6 +719,22 @@ pre{margin:0}
     <div class="feat">
       <h3>Sandbox Mode</h3>
       <p>Run every bash command inside an isolated <a href="https://github.com/containers/bubblewrap">bubblewrap</a> environment with <code>--sandbox</code> — defense in depth on top of the permission engine.</p>
+    </div>
+    <div class="feat">
+      <h3>Phased Planning</h3>
+      <p>An opt-in <code>/plan</code> workflow runs <b>explore → plan → implement → review</b> as context-isolated phases: a read-only agent maps the code, a second drafts the plan, then a write-disabled reviewer <em>runs the code</em> and feeds gaps back for a bounded retry.</p>
+    </div>
+    <div class="feat">
+      <h3>Token-Efficient I/O</h3>
+      <p>Tree-sitter <code>read_minified</code>/<code>edit_minified</code> collapse files to their skeleton; a hard read-before-edit gate blocks blind edits; and oversized <code>bash</code>/<code>webfetch</code> output is relayed to disk with a head+tail summary so the context window stays lean.</p>
+    </div>
+    <div class="feat">
+      <h3>Step-Through Debugging</h3>
+      <p>A built-in Debug Adapter Protocol client drives real debuggers — set breakpoints, step, inspect stacks and variables — straight from the agent loop and Janet plugins (<code>debug</code> tool, <code>dap/*</code> bindings).</p>
+    </div>
+    <div class="feat">
+      <h3>Configurable Themes</h3>
+      <p>Ships a cohesive 80s-CRT <b>phosphor</b> palette (and a <b>plain</b> preset); any <code>&lt;name&gt;.theme.json</code> overrides every semantic color — including a configurable terminal <b>background</b> — with named / <code>#hex</code> / 256-index values.</p>
     </div>
   </div>
 </section>
