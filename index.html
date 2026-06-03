@@ -208,14 +208,6 @@ p{font-size:15px}
   color:var(--fg-hi);margin-bottom:20px;text-wrap:balance;
 }
 .hero h1 em{color:var(--green);font-style:normal}
-/* The logo IS a stylized "D" — drop it in as the first letter of the
-   wordmark. Sized to the cap height + a hair of optical bleed, nudged onto
-   the baseline, with a subtle phosphor glow. */
-.logo-d{
-  height:1.12em;width:1.12em;vertical-align:-0.24em;
-  margin-right:-0.02em;
-  filter:drop-shadow(0 0 14px rgba(63,185,80,0.30));
-}
 .hero .lede{
   font-size:16px;line-height:1.62;color:var(--fg-dim);
   max-width:600px;margin-bottom:28px;text-wrap:pretty;
@@ -546,7 +538,7 @@ pre{margin:0}
 <!-- ═══ HERO ═══ -->
 <section class="hero sec">
   <div class="hero-tag">GPL-3.0 · Rust · <b>on crates.io</b></div>
-  <h1><em><img class="logo-d" src="img/dirge.png" alt="d" decoding="async">irge</em> — The Batteries-Included<br>Rust Coding Agent</h1>
+  <h1><em>dirge</em> — The Batteries-Included<br>Rust Coding Agent</h1>
   <p class="lede">
     Everything on by default — <b>MCP, LSP, ACP</b>, a <b>Janet plugin system</b>,
     tree-sitter <b>code intelligence</b>, and <b>self-improving memory</b>. Yet it's
