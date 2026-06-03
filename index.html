@@ -202,12 +202,25 @@ p{font-size:15px}
   color:var(--fg-mute);margin-bottom:22px;font-family:var(--mono);
 }
 .hero-tag b{color:var(--green);font-weight:600}
+/* Logo to the LEFT of the intro, vertically centred against the whole
+   block (tag + title + lede + buttons) so it frames the text instead of
+   floating beside the title alone. */
+.hero-top{display:flex;align-items:center;gap:clamp(24px,4vw,56px)}
+.hero-intro{flex:1;min-width:0}
+.hero-logo{
+  flex-shrink:0;width:clamp(132px,17vw,232px);height:auto;
+  filter:drop-shadow(0 0 22px rgba(63,185,80,0.28));
+}
 .hero h1{
-  font-size:clamp(40px,6vw,76px);
+  font-size:clamp(40px,5vw,68px);
   font-weight:700;line-height:0.98;letter-spacing:-0.02em;
   color:var(--fg-hi);margin-bottom:20px;text-wrap:balance;
 }
 .hero h1 em{color:var(--green);font-style:normal}
+@media(max-width:720px){
+  .hero-top{flex-direction:column;align-items:flex-start;gap:22px}
+  .hero-logo{width:128px}
+}
 .hero .lede{
   font-size:16px;line-height:1.62;color:var(--fg-dim);
   max-width:600px;margin-bottom:28px;text-wrap:pretty;
@@ -537,6 +550,10 @@ pre{margin:0}
 
 <!-- ═══ HERO ═══ -->
 <section class="hero sec">
+  <div class="hero-top">
+  <img class="hero-logo" src="img/dirge.png" width="500" height="500"
+       alt="dirge logo" decoding="async">
+  <div class="hero-intro">
   <div class="hero-tag">GPL-3.0 · Rust · <b>on crates.io</b></div>
   <h1><em>dirge</em> — The Batteries-Included<br>Rust Coding Agent</h1>
   <p class="lede">
@@ -549,6 +566,8 @@ pre{margin:0}
     <a href="#install" class="btn btn-pri">▸ Get started</a>
     <a href="https://github.com/dirge-code/dirge" class="btn btn-gh">→ View on GitHub</a>
   </div>
+  </div><!-- /hero-intro -->
+  </div><!-- /hero-top -->
 
   <div class="hero-stats">
     <div class="hs"><b>8MB</b><span>RAM idle</span></div>
