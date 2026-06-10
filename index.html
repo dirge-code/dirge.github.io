@@ -528,7 +528,7 @@ pre{margin:0}
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="#" class="brand"><span class="brand-mark">▸</span>dirge<span class="brand-ver">v0.2.4</span></a>
+    <a href="#" class="brand"><span class="brand-mark">▸</span>dirge<span class="brand-ver">v0.4.1</span></a>
     <div class="nav-links">
       <a href="#features">Features</a>
       <a href="#install">Install</a>
@@ -709,7 +709,7 @@ pre{margin:0}
     </div>
     <div class="feat">
       <h3>Robust Agent Loop</h3>
-      <p>Repairs malformed tool calls, validates every write through tree-sitter before it hits disk, trips circuit breakers on non-progressing loops, and escalates to a stronger model on repeated failure.</p>
+      <p>Repairs malformed tool calls, validates every write through tree-sitter before it hits disk, breaks repeat-loops, and — when a model keeps failing — injects a recovery checkpoint, suggests the tool/path it likely meant, then escalates to a stronger model.</p>
     </div>
     <div class="feat">
       <h3>One Permission Engine</h3>
@@ -721,7 +721,7 @@ pre{margin:0}
     </div>
     <div class="feat">
       <h3>Self-Improving Memory</h3>
-      <p>Persistent per-project memory plus a post-session orchestrator that extracts learnings, curates memory &amp; skills, and promotes patterns recurring across sessions.</p>
+      <p>Two-tier per-project memory — hot facts inline, the rest a searchable breadcrumb index — injected as a cache-stable snapshot. A post-session orchestrator extracts learnings and curates memory &amp; skills between sessions.</p>
     </div>
     <div class="feat">
       <h3>Code Intelligence</h3>
@@ -737,7 +737,7 @@ pre{margin:0}
     </div>
     <div class="feat">
       <h3>Sandbox Mode</h3>
-      <p>Run every bash command inside an isolated <a href="https://github.com/containers/bubblewrap">bubblewrap</a> environment with <code>--sandbox</code> — defense in depth on top of the permission engine.</p>
+      <p>Run every bash command in isolation with <code>--sandbox</code>: <a href="https://github.com/containers/bubblewrap">bubblewrap</a> for a namespaced jail, or a hardware-isolated <a href="https://github.com/containers/libkrun">libkrun</a> microVM — defense in depth on top of the permission engine.</p>
     </div>
     <div class="feat">
       <h3>Phased Planning</h3>
@@ -858,7 +858,10 @@ pre{margin:0}
     <div class="card"><h4>Search</h4><p><code>grep</code> · <code>glob</code> · <code>session_search</code></p></div>
     <div class="card"><h4>Web</h4><p><code>webfetch</code> · <code>websearch</code></p></div>
     <div class="card"><h4>Code intelligence</h4><p><code>list_symbols</code> · <code>get_symbol_body</code> · <code>find_callers</code> · <code>find_callees</code> · <code>find_definition</code> · <code>lsp</code> · <code>repo_overview</code></p></div>
-    <div class="card"><h4>Agent &amp; memory</h4><p><code>task</code> · <code>plan</code> · <code>write_todo_list</code> · <code>memory</code> · <code>skill</code> · <code>question</code></p></div>
+    <div class="card"><h4>Agent &amp; memory</h4><p><code>task</code> · <code>task_status</code> · <code>write_todo_list</code> · <code>memory</code> · <code>skill</code> · <code>question</code></p></div>
+    <div class="card"><h4>Token-efficient I/O</h4><p><code>read_minified</code> · <code>edit_minified</code> — collapse a file to its tree-sitter skeleton</p></div>
+    <div class="card"><h4>Debugging</h4><p><code>debug</code> — DAP step-through: breakpoints, step, inspect stacks &amp; variables</p></div>
+    <div class="card"><h4>Dynamic discovery</h4><p><code>tool_search</code> — load tools on demand to keep the prompt lean</p></div>
   </div>
 </section>
 
@@ -870,18 +873,24 @@ pre{margin:0}
 
   <div class="card-grid">
     <div class="card"><h4>/model</h4><p>Show or switch LLM model</p></div>
+    <div class="card"><h4>/agent</h4><p>Switch the active agent profile</p></div>
     <div class="card"><h4>/prompt</h4><p>List or activate system prompts</p></div>
+    <div class="card"><h4>/plan</h4><p>Run the phased plan workflow</p></div>
     <div class="card"><h4>/mode</h4><p>Set security permission mode</p></div>
     <div class="card"><h4>/why</h4><p>Trace the last permission decision</p></div>
-    <div class="card"><h4>/display</h4><p>Configure visible info panes</p></div>
+    <div class="card"><h4>/allow</h4><p>Manage the session allowlist</p></div>
+    <div class="card"><h4>/sandbox</h4><p>Inspect &amp; control bash sandboxing</p></div>
+    <div class="card"><h4>/display</h4><p>Pick visible info panes</p></div>
+    <div class="card"><h4>/panel</h4><p>Toggle the side gutters</p></div>
     <div class="card"><h4>/compress</h4><p>Compact history for context</p></div>
     <div class="card"><h4>/sessions</h4><p>List, save, load sessions</p></div>
     <div class="card"><h4>/tree</h4><p>Show session branch tree</p></div>
     <div class="card"><h4>/fork</h4><p>Branch the conversation</p></div>
     <div class="card"><h4>/loop</h4><p>Start an iterative coding loop</p></div>
+    <div class="card"><h4>/tasks</h4><p>List background shells &amp; agents</p></div>
     <div class="card"><h4>/mcp</h4><p>List MCP servers and tools</p></div>
     <div class="card"><h4>/worktree</h4><p>Create a git worktree</p></div>
-    <div class="card"><h4>/allow</h4><p>Manage the session allowlist</p></div>
+    <div class="card"><h4>/plugins</h4><p>List loaded Janet plugins</p></div>
     <div class="card"><h4>/reasoning</h4><p>Toggle reasoning visibility</p></div>
     <div class="card"><h4>/btw</h4><p>Quick question (no tools)</p></div>
     <div class="card"><h4>/help</h4><p>Show all commands</p></div>
@@ -1290,10 +1299,12 @@ pre{margin:0}
       <span class="chev">▾</span>
     </div>
     <div class="faq-a">
-      Tree-sitter grammars for TypeScript/TSX, Python, Clojure, Go, Ruby, Rust, Java,
-      C, C++, and Elixir — 10 languages by default. Each provides <code>list_symbols</code>,
-      <code>get_symbol_body</code>, <code>find_callers</code>, <code>find_callees</code>, and
-      <code>find_definition</code>, with LSP diagnostics surfaced inline.
+      The code-navigation tools — <code>list_symbols</code>, <code>get_symbol_body</code>,
+      <code>find_callers</code>, <code>find_callees</code>, <code>find_definition</code> —
+      cover TypeScript/TSX, Python, Clojure, Go, Ruby, Rust, Java, C, and C++. Tree-sitter
+      pre-write validation and the minified read/edit tools additionally cover Elixir and
+      Bash, and LSP diagnostics are surfaced inline. Each grammar is gated on its own
+      <code>semantic-&lt;lang&gt;</code> feature, all on by default.
     </div>
 
     <div class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
@@ -1301,10 +1312,13 @@ pre{margin:0}
       <span class="chev">▾</span>
     </div>
     <div class="faq-a">
-      dirge keeps persistent per-project memory and pitfalls files. After a session, a
-      post-session orchestrator extracts learnings, curates memory and skills, and promotes
-      patterns that recur across sessions — so the agent carries preferences and past
-      mistakes forward instead of starting cold every time.
+      dirge keeps persistent per-project memory (facts and pitfalls) in the session DB,
+      injected into the system prompt as a cache-stable snapshot. It's two-tiered: hot
+      entries inline verbatim, and once the budget fills the rest demote to a searchable
+      breadcrumb index the agent expands on demand. After an idle session a post-session
+      orchestrator extracts learnings and curates memory and skills (stale-detection,
+      lifecycle, LLM consolidation) — so the agent carries preferences and past mistakes
+      forward instead of starting cold every time.
     </div>
 
     <div class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
