@@ -733,7 +733,7 @@ pre{margin:0}
     </div>
     <div class="feat">
       <h3>MCP &amp; ACP</h3>
-      <p>Model Context Protocol for extra tools and servers. Agent Communication Protocol for editor integration with Zed.</p>
+      <p>Connect MCP servers for extra tools — or run <code>dirge mcp</code> to <em>be</em> one, so another agent (e.g. Claude Code) delegates implementation tasks to dirge and reviews them. ACP for editor integration with Zed.</p>
     </div>
     <div class="feat">
       <h3>Sandbox Mode</h3>
@@ -839,7 +839,10 @@ pre{margin:0}
 <span class="p">$</span> dirge <span class="f">--sandbox</span>
 
 <span class="c"># Restrictive mode (prompt every tool)</span>
-<span class="p">$</span> dirge <span class="f">-R</span></pre>
+<span class="p">$</span> dirge <span class="f">-R</span>
+
+<span class="c"># MCP server: let another agent delegate tasks to dirge</span>
+<span class="p">$</span> dirge <span class="f">mcp</span></pre>
   </div>
 </section>
 
