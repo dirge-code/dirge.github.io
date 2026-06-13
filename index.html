@@ -721,7 +721,11 @@ pre{margin:0}
     </div>
     <div class="feat">
       <h3>Self-Improving Memory</h3>
-      <p>Two-tier per-project memory — hot facts inline, the rest a searchable breadcrumb index — injected as a cache-stable snapshot. A post-session orchestrator extracts learnings and curates memory &amp; skills between sessions.</p>
+      <p>Two-tier per-project memory — hot facts inline, the rest a searchable breadcrumb index — plus a global cross-project tier for durable preferences, injected as a cache-stable snapshot. A post-session orchestrator extracts learnings and curates memory &amp; skills between sessions.</p>
+    </div>
+    <div class="feat">
+      <h3>Long-Horizon Sessions</h3>
+      <p>Durable, incrementally-refreshed checkpoints anchored to a stable identity — so resuming a long, compacted session recovers its live state instead of a stale snapshot. Hold autonomous runs to a natural-language stop condition with <code>--goal</code>. Adapted from <a href="https://github.com/XiaomiMiMo/MiMo-Code">MiMo-Code</a>.</p>
     </div>
     <div class="feat">
       <h3>Code Intelligence</h3>
@@ -1333,10 +1337,27 @@ pre{margin:0}
       dirge keeps persistent per-project memory (facts and pitfalls) in the session DB,
       injected into the system prompt as a cache-stable snapshot. It's two-tiered: hot
       entries inline verbatim, and once the budget fills the rest demote to a searchable
-      breadcrumb index the agent expands on demand. After an idle session a post-session
+      breadcrumb index the agent expands on demand. A separate global, cross-project tier
+      holds durable user preferences that follow you across every repo. After an idle session a post-session
       orchestrator extracts learnings and curates memory and skills (stale-detection,
       lifecycle, LLM consolidation) — so the agent carries preferences and past mistakes
       forward instead of starting cold every time.
+    </div>
+
+    <div class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+      <span class="qm">Q</span> What happens to long sessions when I resume them?
+      <span class="chev">▾</span>
+    </div>
+    <div class="faq-a">
+      Every conversation carries a stable identity and a durable checkpoint that's refreshed
+      in the background as context grows (a 20%-of-window cadence), without discarding history.
+      A long session compacts and rotates internally over time, but resuming by the id you
+      started with resolves to its live tip and recovers fresh state — it picks up where it
+      left off instead of loading a stale pre-compaction snapshot, and the verbatim original
+      request is re-anchored so the goal doesn't drift. Autonomous runs can be held to a
+      natural-language stop condition with <code>--goal "…"</code>, checked by an independent
+      judge each time the agent tries to stop. This long-horizon design is adapted from
+      <a href="https://github.com/XiaomiMiMo/MiMo-Code">MiMo-Code</a>.
     </div>
 
     <div class="faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
