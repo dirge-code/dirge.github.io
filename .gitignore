@@ -3,3 +3,6 @@
 ._*
 .Spotlight-V100
 .Trashes
+
+# dirge local session/memory state
+.dirge/
